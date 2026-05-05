@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".login_admin"
+    android:background="@drawable/bg_login_new">
+
+    <EditText
+        android:id="@+id/etNama"
+        android:layout_width="288dp"
+        android:layout_height="39dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="428dp"
+        android:background="#69081E78"
+        android:hint="Please input your name"
+        android:padding="10dp"
+
+        android:textColor="@color/black"
+        android:textColorHint="#831F1D1D"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- BUTTON LOGIN -->
+
+    <EditText
+        android:id="@+id/etNama2"
+        android:layout_width="287dp"
+        android:layout_height="40dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="32dp"
+        android:background="#69081E78"
+        android:hint="Please input your password"
+        android:padding="10dp"
+
+        android:textColor="#000000"
+        android:textColorHint="#831F1D1D"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etNama" />
+
+    <Button
+        android:id="@+id/btn_register"
+        android:layout_width="154dp"
+        android:layout_height="40dp"
+        android:layout_marginHorizontal="80dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="#1A237E"
+
+        android:text="Login"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etNama2" />
+
+    <TextView
+        android:id="@+id/tvRegister"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="register now!"
+        android:textColor="#7F85AB"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_register" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
