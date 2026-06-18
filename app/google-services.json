@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "26633668713",
+    "project_id": "diva-firs-madiun",
+    "storage_bucket": "diva-firs-madiun.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:26633668713:android:23de2a23f847beb5993af8",
+        "android_client_info": {
+          "package_name": "com.example.firsmadiun"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkO1vzmEKP7oe18RNig3dcDuGl0C5as-U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
