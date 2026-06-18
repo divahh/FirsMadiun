@@ -43,7 +43,7 @@ class FirestoreRepository {
             }
 
             // Mengambil nilai boolean dari field 'isAdmin', jika null/tidak ada maka fallback ke false
-            val isAdmin = snapshot?.getBoolean("isAdmin") ?: false
+            val isAdmin = snapshot?.getBoolean("admin") ?: false
             trySend(isAdmin)
         }
 
@@ -66,7 +66,9 @@ class FirestoreRepository {
             }
 
             if (snapshot != null) {
-                val listLaporan = snapshot.toObjects(LaporanModel::class.java)
+                val listLaporan = snapshot.documents.mapNotNull { document ->
+                    document.toObject(LaporanModel::class.java)?.copy(id = document.id)
+                }
                 trySend(Result.success(listLaporan))
             }
         }
@@ -115,7 +117,7 @@ class FirestoreRepository {
     suspend fun isAdmin(): Boolean {
         return try {
             val snapshot = db.collection("users").document(currentUid).get().await()
-            snapshot.getBoolean("isAdmin") ?: false
+            snapshot.getBoolean("admin") ?: false
         } catch (e: Exception) {
             false
         }
@@ -172,7 +174,9 @@ class FirestoreRepository {
                     return@addSnapshotListener
                 }
 
-                val list = snapshot?.toObjects(LaporanModel::class.java) ?: emptyList()
+                val list = snapshot?.documents?.mapNotNull { document ->
+                    document.toObject(LaporanModel::class.java)?.copy(id = document.id)
+                } ?: emptyList()
                 trySend(Result.success(list))
             }
         awaitClose { listener.remove() }
@@ -274,5 +278,22 @@ class FirestoreRepository {
         outputStream.close()
 
         return  byteArray
+    }
+
+    // ── Di dalam file FirestoreRepository.kt ───────────────────
+
+    /**
+     * Menghapus dokumen laporan berdasarkan ID.
+     */
+    suspend fun hapusLaporan(laporanId: String): Result<Unit> {
+        return try {
+            db.collection("laporan")
+                .document(laporanId)
+                .delete()
+                .await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }

@@ -47,7 +47,8 @@ fun HomeScreen(
     viewModel: HomeViewModel = viewModel(),
     onKategoriClick: (String) -> Unit = {},
     onRiwayatClick: () -> Unit = {},
-    onBannerClick: (String) -> Unit = {}
+    onBannerClick: (String) -> Unit = {},
+    onProfileClick: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -72,6 +73,7 @@ fun HomeScreen(
             viewModel.onLaporClick()
             onKategoriClick("lainnya") // Memicu navigasi Compose dengan ID default
         },
+        onProfileClick = onProfileClick
     )
 }
 
@@ -83,6 +85,7 @@ fun HomeContent(
     onBannerClick: (String) -> Unit,
     onPelaporanClick: (String) -> Unit,
     onLaporClick: () -> Unit,
+    onProfileClick: () -> Unit = {}
 ) {
     val scrollState = rememberScrollState()
     var visible by remember { mutableStateOf(false) }
@@ -128,7 +131,8 @@ fun HomeContent(
             ) {
                 HeaderHome(
                     namaUser = uiState.namaUser,
-                    onLogout = onLogout
+                    onLogout = onLogout,
+                    onProfileClick = onProfileClick
                 )
             }
         }

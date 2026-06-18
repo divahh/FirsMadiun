@@ -80,6 +80,7 @@ fun ReportScreen(
     // Set kategori awal dari navigasi
     LaunchedEffect(selectedKategori) {
         viewModel.onKategoriSelected(selectedKategori)
+        viewModel.setInitialKategori(selectedKategori)
     }
 
     // Handle sukses
@@ -278,15 +279,13 @@ fun LaporanContent(
                                             android.view.MotionEvent.ACTION_DOWN,
                                             android.view.MotionEvent.ACTION_MOVE -> {
                                                 localView.parent?.requestDisallowInterceptTouchEvent(true)
-                                                true // <--- Ubah jadi true saat disentuh/digeser
                                             }
                                             android.view.MotionEvent.ACTION_UP,
                                             android.view.MotionEvent.ACTION_CANCEL -> {
                                                 localView.parent?.requestDisallowInterceptTouchEvent(false)
-                                                true // <--- Ubah jadi true saat dilepas
                                             }
-                                            else -> false
                                         }
+                                        false
                                     }
                             ) {
                                 GoogleMapPicker(
@@ -316,7 +315,8 @@ fun LaporanContent(
                                     Text(
                                         text = "Aplikasi memerlukan izin lokasi untuk menampilkan peta kejadian.",
                                         style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onErrorContainer
+                                        color = MaterialTheme.colorScheme.onErrorContainer,
+                                        textAlign = TextAlign.Center,
                                     )
                                     OutlinedButton(
                                         onClick = onTriggerPermissionRequest,

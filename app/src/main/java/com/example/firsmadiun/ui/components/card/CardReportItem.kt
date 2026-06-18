@@ -6,12 +6,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ChevronRight
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -30,6 +32,7 @@ import java.util.Locale
 fun CardReportItem(
     laporan: LaporanModel,
     onClick: () -> Unit,
+    onDeleteLaporan: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -39,8 +42,7 @@ fun CardReportItem(
                 elevation = 3.dp,
                 shape = RoundedCornerShape(14.dp),
                 ambientColor = DamkarBlue.copy(alpha = 0.06f)
-            )
-            .clickable(onClick = onClick),
+            ),
         shape = RoundedCornerShape(14.dp),
         colors = CardDefaults.cardColors(containerColor = White),
         border = BorderStroke(1.dp, DividerColor)
@@ -48,7 +50,8 @@ fun CardReportItem(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(16.dp)
+                .clickable(onClick = onClick),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             // Baris atas: Kategori + Status + Chevron
@@ -119,6 +122,18 @@ fun CardReportItem(
                     style = MaterialTheme.typography.labelMedium,
                     color = TextSecondary
                 )
+                Spacer(modifier = Modifier.width(2.dp))
+                IconButton (
+                    onClick = onDeleteLaporan,
+                    modifier = Modifier.size(24.dp),
+                ) {
+                    Icon(
+                        modifier = Modifier.size(18.dp),
+                        imageVector = Icons.Outlined.Delete,
+                        tint = Color.Red,
+                        contentDescription = null
+                    )
+                }
             }
         }
     }

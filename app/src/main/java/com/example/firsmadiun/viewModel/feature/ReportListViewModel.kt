@@ -81,4 +81,21 @@ class ReportListViewModel @Inject constructor() : ViewModel() {
             )
         }
     }
+
+    fun onDeleteLaporan(laporanId: String) {
+        viewModelScope.launch {
+            // Opsional: Kamu bisa menambahkan state pemuat/loading jika diperlukan
+            firestoreRepository.hapusLaporan(laporanId).fold(
+                onSuccess = {
+                    // Berhasil terhapus. Karena realtime flow aktif,
+                    // list di UI otomatis otomatis langsung terupdate.
+                },
+                onFailure = { e ->
+                    _uiState.update {
+                        it.copy(error = e.message ?: "Gagal menghapus laporan")
+                    }
+                }
+            )
+        }
+    }
 }

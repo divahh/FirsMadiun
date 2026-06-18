@@ -72,6 +72,6 @@ val daftarKategori = listOf(
     "Kebakaran",
     "Penyelamatan",
     "Hewan",
-    "Pohon Tumbang",
+    "Pohon",
     "Lainnya"
 )

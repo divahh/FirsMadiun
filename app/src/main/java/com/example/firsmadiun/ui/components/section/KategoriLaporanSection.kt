@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.firsmadiun.data.models.KategoriLaporan
@@ -44,11 +45,12 @@ fun KategoriLaporanSection(
                 color = TextPrimary,
                 modifier = Modifier.weight(1f)
             )
-            TextButton(onClick = onLihatSemua) {
+            // TODO: Ganti warna lihat semua ketika udah ada kategori selain yang sekarang
+            TextButton(onClick = onLihatSemua, enabled = false) {
                 Text(
                     text = "Lihat semua",
                     style = MaterialTheme.typography.labelLarge,
-                    color = DamkarBlue
+                    color = Color(0xFFF4F6FA)
                 )
             }
         }

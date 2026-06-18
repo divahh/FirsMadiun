@@ -1,6 +1,8 @@
 package com.example.firsmadiun.data.repository
 
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.tasks.await
 
@@ -29,6 +31,32 @@ class AuthRepository {
             val result = auth.createUserWithEmailAndPassword(email, password).await()
             val user = result.user ?: throw Exception("Failed to create user")
             Result.success(user)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun updatePassword(
+        passwordLama: String,
+        passwordBaru: String
+    ): Result<Unit> {
+        return try {
+            val user = auth.currentUser
+                ?: return Result.failure(Exception("User belum login"))
+
+            val email = user.email
+                ?: return Result.failure(Exception("Email user tidak ditemukan"))
+
+            // 1. Reauthenticate dulu dengan password lama
+            val credential = EmailAuthProvider.getCredential(email, passwordLama)
+            user.reauthenticate(credential).await()
+
+            // 2. Baru update ke password baru
+            user.updatePassword(passwordBaru).await()
+
+            Result.success(Unit)
+        } catch (e: FirebaseAuthInvalidCredentialsException) {
+            Result.failure(Exception("Kata sandi saat ini salah"))
         } catch (e: Exception) {
             Result.failure(e)
         }

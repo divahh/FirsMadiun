@@ -13,5 +13,5 @@ data class UserProfile(
     val fotoUrl: String = "",
     @ServerTimestamp
     val createdAt: Timestamp? = null,
-    val isAdmin: Boolean = false
+    val admin: Boolean = false
 )

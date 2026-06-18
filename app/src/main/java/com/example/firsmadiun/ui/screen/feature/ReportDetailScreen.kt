@@ -6,6 +6,7 @@ import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -22,15 +23,21 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInteropFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.AsyncImage
 import com.example.firsmadiun.data.models.LaporanModel
+import com.example.firsmadiun.data.models.LokasiPeta
 import com.example.firsmadiun.data.models.StatusLaporan
+import com.example.firsmadiun.ui.components.GoogleMapPicker
 import com.example.firsmadiun.ui.components.StatusBadge
 import com.example.firsmadiun.ui.theme.*
 import com.example.firsmadiun.viewModel.feature.ReportDetailUiState
@@ -46,6 +53,7 @@ fun ReportDetailScreen(
     viewModel: ReportDetailViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
     LaunchedEffect(laporanId) {
         viewModel.loadLaporan(laporanId)
@@ -54,7 +62,10 @@ fun ReportDetailScreen(
     ReportDetailContent(
         uiState = uiState,
         onBack = onBack,
-        onUbahStatus = viewModel::onUbahStatus
+        onUbahStatus = viewModel::onUbahStatus,
+        onLokasiDipilihDariPeta = viewModel::onLokasiDipilihDariPeta,
+        onTogglePeta = viewModel::onTogglePeta,
+        onDownloadGambar = { viewModel.onDownloadGambar(context) }
     )
 }
 
@@ -62,10 +73,14 @@ fun ReportDetailScreen(
 fun ReportDetailContent(
     uiState: ReportDetailUiState,
     onBack: () -> Unit,
-    onUbahStatus: (String) -> Unit = {}
+    onUbahStatus: (String) -> Unit = {},
+    onLokasiDipilihDariPeta: (LokasiPeta) -> Unit = {},
+    onTogglePeta: () -> Unit = {},
+    onDownloadGambar: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
+    val localView = LocalView.current
     var visible by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) { visible = true }
 
@@ -346,7 +361,148 @@ fun ReportDetailContent(
                                 }
                             }
 
-                            // === Card 4: Ubah Status (Admin) ===
+                            // === Card 4: Google Maps (Admin) ===
+                            if (uiState.isAdmin) {
+                                Card(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    shape = RoundedCornerShape(16.dp),
+                                    colors = CardDefaults.cardColors(containerColor = White),
+                                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                                ) {
+                                    Column(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(16.dp),
+                                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        Row(verticalAlignment = Alignment.CenterVertically) {
+                                            Icon(
+                                                imageVector = Icons.Outlined.Map,
+                                                contentDescription = null,
+                                                tint = DamkarBlue,
+                                                modifier = Modifier.size(20.dp)
+                                            )
+                                            Spacer(modifier = Modifier.width(8.dp))
+                                            Text(
+                                                text = "Peta Lokasi",
+                                                style = MaterialTheme.typography.titleMedium.copy(
+                                                    fontWeight = FontWeight.SemiBold
+                                                ),
+                                                color = TextPrimary
+                                            )
+                                        }
+                                        Box(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .pointerInteropFilter { motionEvent ->
+                                                    when (motionEvent.action) {
+                                                        android.view.MotionEvent.ACTION_DOWN,
+                                                        android.view.MotionEvent.ACTION_MOVE -> {
+                                                            localView.parent?.requestDisallowInterceptTouchEvent(
+                                                                true
+                                                            )
+                                                        }
+
+                                                        android.view.MotionEvent.ACTION_UP,
+                                                        android.view.MotionEvent.ACTION_CANCEL -> {
+                                                            localView.parent?.requestDisallowInterceptTouchEvent(
+                                                                false
+                                                            )
+                                                        }
+                                                    }
+                                                    false
+                                                }
+                                        ) {
+                                            GoogleMapPicker(
+                                                isVisible = uiState.isPetaVisible,
+                                                onLokasiDipilih = onLokasiDipilihDariPeta,
+                                                onToggle = onTogglePeta,
+                                                lokasiTerpilih = if (uiState.form.latitude != null) {
+                                                    LokasiPeta(
+                                                        uiState.form.latitude!!,
+                                                        uiState.form.longitude!!,
+                                                        uiState.form.alamatPeta
+                                                    )
+                                                } else null
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+
+                            // === Card 5: Gambar ===
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = RoundedCornerShape(16.dp),
+                                colors = CardDefaults.cardColors(containerColor = White),
+                                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                            ) {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                    ) {
+                                        Row(verticalAlignment = Alignment.CenterVertically) {
+                                            Icon(
+                                                imageVector = Icons.Outlined.Image,
+                                                contentDescription = null,
+                                                tint = DamkarBlue,
+                                                modifier = Modifier.size(20.dp)
+                                            )
+                                            Spacer(modifier = Modifier.width(8.dp))
+                                            Text(
+                                                text = "Foto Kejadian",
+                                                style = MaterialTheme.typography.titleMedium.copy(
+                                                    fontWeight = FontWeight.SemiBold
+                                                ),
+                                                color = TextPrimary
+                                            )
+                                        }
+                                        IconButton (
+                                            onClick = onDownloadGambar,
+                                            modifier = Modifier.size(24.dp),
+                                        ) {
+                                            Icon(
+                                                modifier = Modifier.size(18.dp),
+                                                imageVector = Icons.Outlined.Download,
+                                                tint = DamkarBlue,
+                                                contentDescription = null
+                                            )
+                                        }
+
+                                    }
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(180.dp)
+                                            .clip(RoundedCornerShape(8.dp))
+                                            .border(1.dp, Color.Gray, RoundedCornerShape(8.dp)),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        if (laporan.fotoBuktiUrl.isNotBlank()) {
+                                            AsyncImage(
+                                                model = laporan.fotoBuktiUrl,
+                                                contentDescription = "Menampilkan Foto Kejadian",
+                                                modifier = Modifier.fillMaxWidth(),
+                                                contentScale = ContentScale.Crop
+                                            )
+                                        } else {
+                                            Text(
+                                                text = "Belum ada foto",
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                color = TextSecondary
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+
+                            // === Card 6: Ubah Status (Admin) ===
                             if (uiState.isAdmin) {
                                 Card(
                                     modifier = Modifier.fillMaxWidth(),

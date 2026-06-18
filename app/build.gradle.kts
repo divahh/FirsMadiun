@@ -76,6 +76,7 @@ dependencies {
     implementation("com.google.maps.android:maps-compose-utils:4.3.3")
     implementation("com.google.accompanist:accompanist-permissions:0.34.0")
 
+    implementation("androidx.compose.material:material-icons-extended")
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.room.ktx)

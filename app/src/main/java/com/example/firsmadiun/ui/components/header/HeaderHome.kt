@@ -1,6 +1,7 @@
 package com.example.firsmadiun.ui.components.header
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -30,6 +31,7 @@ import com.example.firsmadiun.ui.theme.*
 fun HeaderHome(
     namaUser: String,
     onLogout: () -> Unit,
+    onProfileClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -59,6 +61,7 @@ fun HeaderHome(
                         .size(40.dp)
                         .clip(CircleShape)
                         .background(White.copy(alpha = 0.2f))
+                        .clickable { onProfileClick() }
                 ) {
                     Logo(size = 28.dp)
                 }

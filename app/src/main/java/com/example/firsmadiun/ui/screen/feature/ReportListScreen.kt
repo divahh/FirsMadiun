@@ -6,11 +6,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Inbox
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -23,7 +21,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.firsmadiun.data.models.LaporanModel
 import com.example.firsmadiun.data.models.StatusLaporan
 import com.example.firsmadiun.ui.components.button.PrimaryButton
@@ -48,7 +45,8 @@ fun ReportListScreen(
         uiState = uiState,
         onBack = onBack,
         onTambahLaporan = onTambahLaporan,
-        onItemClick = onItemClick
+        onItemClick = onItemClick,
+        onDeleteLaporan = viewModel::onDeleteLaporan
     )
 }
 
@@ -57,7 +55,8 @@ fun ReportListContent(
     uiState: ReportListUiState,
     onBack: () -> Unit,
     onTambahLaporan: () -> Unit,
-    onItemClick: (String) -> Unit
+    onItemClick: (String) -> Unit,
+    onDeleteLaporan: (String) -> Unit,
 ) {
     var visible by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) { visible = true }
@@ -172,7 +171,8 @@ fun ReportListContent(
                             ) {
                                 CardReportItem(
                                     laporan = laporan,
-                                    onClick = { onItemClick(laporan.id) }
+                                    onClick = { onItemClick(laporan.id) },
+                                    onDeleteLaporan = { onDeleteLaporan(laporan.id) }
                                 )
                             }
                         }
@@ -244,7 +244,8 @@ fun ReportListEmptyPreview() {
             uiState = ReportListUiState(isLoading = false),
             onBack = {},
             onTambahLaporan = {},
-            onItemClick = {}
+            onItemClick = {},
+            onDeleteLaporan = {}
         )
     }
 }
@@ -285,7 +286,8 @@ fun ReportListDataPreview() {
             ),
             onBack = {},
             onTambahLaporan = {},
-            onItemClick = {}
+            onItemClick = {},
+            onDeleteLaporan = {}
         )
     }
 }

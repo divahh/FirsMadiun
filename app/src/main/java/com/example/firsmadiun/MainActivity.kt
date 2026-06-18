@@ -17,6 +17,7 @@ import com.example.firsmadiun.ui.screen.auth.login.LoginScreen
 import com.example.firsmadiun.ui.screen.auth.signup.RegisterScreen
 import com.example.firsmadiun.ui.screen.feature.HomeScreen
 import com.example.firsmadiun.ui.screen.feature.NoPentingScreen
+import com.example.firsmadiun.ui.screen.feature.ProfileScreen
 import com.example.firsmadiun.ui.screen.feature.ReportDetailScreen
 import com.example.firsmadiun.ui.screen.feature.ReportListScreen
 import com.example.firsmadiun.ui.screen.feature.SplashScreen
@@ -117,11 +118,14 @@ fun DamkarApp() {
                     navController.navigate(DamkarRoutes.DAFTAR_LAPORAN)
                 },
                 onBannerClick = { type ->
-                    if (type == "tips" || type == "tipsedu" || type == DamkarRoutes.TIPSEDU) {
+                    if (type == "tips" || type == DamkarRoutes.TIPSEDU) {
                         navController.navigate(DamkarRoutes.TIPSEDU)
                     } else {
                         navController.navigate(DamkarRoutes.NOPENTING)
                     }
+                },
+                onProfileClick = { // <--- 1. TAMBAHKAN AKSI NAVIGASI PROFIL DI SINI
+                    navController.navigate(DamkarRoutes.PROFIL)
                 }
             )
         }
@@ -132,6 +136,18 @@ fun DamkarApp() {
         }
         composable(DamkarRoutes.NOPENTING) {
             NoPentingScreen(type = TipsType.NOPENTING, onBack = { navController.popBackStack() })
+        }
+
+        // ── Profil Akun ───────────────────────────────────────
+        composable(DamkarRoutes.PROFIL) { // <--- 2. REGISTER RUTENYA JIKA BELUM ADA
+            ProfileScreen(
+                onBack = { navController.popBackStack() },
+                onLogoutSuccess = {
+                    navController.navigate(DamkarRoutes.LOGIN) {
+                        popUpTo(DamkarRoutes.HOME) { inclusive = true }
+                    }
+                }
+            )
         }
 
         // ── Lapor Kejadian ───────────────────────────────────
@@ -194,6 +210,7 @@ object DamkarRoutes {
     const val HOME    = "home"
     const val TIPSEDU = "tips&edu"
     const val NOPENTING = "no_penting"
+    const val PROFIL = "profil"
     const val LAPORAN = "laporan/{kategori}"
     const val DAFTAR_LAPORAN = "daftar_laporan"
     const val DETAIL_LAPORAN = "detail_laporan/{laporanId}"

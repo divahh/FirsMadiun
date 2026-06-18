@@ -49,6 +49,15 @@ class ReportViewModel @Inject constructor(
         loadUserData()
     }
 
+    fun setInitialKategori(kategori: String) {
+        // Hanya update jika kategori valid dan tidak kosong
+        if (kategori.isNotBlank()) {
+            _uiState.update {
+                it.copy(form = it.form.copy(kategori = kategori))
+            }
+        }
+    }
+
     private fun loadUserData() {
         viewModelScope.launch {
             val firebaseUser = authRepository.currentUser

@@ -38,11 +38,11 @@ class HomeViewModel : ViewModel() {
         _uiState.value = HomeUiState(
             namaUser = namaUser,
             kategoriList = listOf(
-                KategoriLaporan("kebakaran", "Kebakaran", Icons.Outlined.LocalFireDepartment),
-                KategoriLaporan("penyelamatan", "Penyelamatan", Icons.Outlined.HealthAndSafety),
-                KategoriLaporan("hewan", "Hewan", Icons.Outlined.Pets),
-                KategoriLaporan("pohon", "Pohon Tumbang", Icons.Outlined.Park),
-                KategoriLaporan("lainnya", "Lainnya", Icons.Outlined.MoreHoriz)
+                KategoriLaporan("Kebakaran", "Kebakaran", Icons.Outlined.LocalFireDepartment),
+                KategoriLaporan("Penyelamatan", "Penyelamatan", Icons.Outlined.HealthAndSafety),
+                KategoriLaporan("Hewan", "Hewan", Icons.Outlined.Pets),
+                KategoriLaporan("Pohon", "Pohon Tumbang", Icons.Outlined.Park),
+                KategoriLaporan("Lainnya", "Lainnya", Icons.Outlined.MoreHoriz)
             ),
             bannerList = listOf(
                 BannerItem(
@@ -89,6 +89,6 @@ class HomeViewModel : ViewModel() {
 
     fun onLaporClick() {
         // Alihkan langsung ke fungsi onKategoriClick dengan ID default
-        onKategoriClick("lainnya")
+        onKategoriClick("Lainnya")
     }
 }
